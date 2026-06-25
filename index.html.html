@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulário de Pesquisa — Avaliação Biopsicossocial nas IFES de MG</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue: #2563EB;
+    --blue-light: #EFF6FF;
+    --blue-mid: #BFDBFE;
+    --text-primary: #111827;
+    --text-secondary: #6B7280;
+    --text-muted: #9CA3AF;
+    --border: #E5E7EB;
+    --border-strong: #D1D5DB;
+    --bg: #F9FAFB;
+    --bg-white: #FFFFFF;
+    --bg-section: #F3F4F6;
+    --success: #059669;
+    --success-light: #ECFDF5;
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* PROGRESS BAR */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--border);
+    z-index: 100;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--blue);
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+
+  /* LAYOUT */
+  .page-wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* HEADER */
+  .page-header {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .institution-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--blue-light);
+    color: var(--blue);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 100px;
+    margin-bottom: 16px;
+  }
+  .page-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .page-meta {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  /* NOTICE */
+  .notice {
+    background: var(--blue-light);
+    border: 1px solid var(--blue-mid);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    font-size: 13px;
+    color: #1E40AF;
+    line-height: 1.6;
+    margin-bottom: 36px;
+  }
+  .notice strong { font-weight: 600; }
+
+  /* SECTION */
+  .form-section {
+    margin-bottom: 40px;
+  }
+  .section-header {
+    background: var(--bg-section);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .section-num {
+    background: var(--blue);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    min-width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .section-info {}
+  .section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+  }
+  .section-obj {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* SUBSECTION */
+  .subsection-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 28px 0 16px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* QUESTIONS */
+  .question {
+    margin-bottom: 28px;
+    background: var(--bg-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+  }
+  .question-label {
+    font-size: 14px;
+    color: var(--text-primary);
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  .question-num {
+    font-weight: 700;
+    color: var(--blue);
+    margin-right: 4px;
+  }
+  .question-hint {
+    font-size: 12px;
+    color: var(--text-secondary);
+    background: var(--bg-section);
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    line-height: 1.55;
+    border-left: 2px solid var(--border-strong);
+  }
+
+  /* FIELDS */
+  .field-group { margin-bottom: 14px; }
+  .field-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    display: block;
+  }
+  .field-grid { display: grid; gap: 14px; }
+  .field-grid-2 { grid-template-columns: 1fr 1fr; }
+  @media (max-width: 560px) { .field-grid-2 { grid-template-columns: 1fr; } }
+
+  input[type="text"], textarea, select {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: inherit;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--bg-white);
+    color: var(--text-primary);
+    transition: border-color 0.15s, box-shadow 0.15s;
+    line-height: 1.5;
+  }
+  input[type="text"]:focus, textarea:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+  textarea { min-height: 90px; resize: vertical; }
+
+  /* SCALE TABLE */
+  .scale-legend {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 14px;
+    padding: 8px 10px;
+    background: var(--bg-section);
+    border-radius: 6px;
+    line-height: 1.6;
+  }
+  .scale-legend span { display: inline-block; margin-right: 12px; }
+
+  .scale-table-wrap { overflow-x: auto; margin-bottom: 0; }
+  .scale-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 520px;
+  }
+  .scale-table thead th {
+    text-align: center;
+    padding: 8px 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-section);
+    white-space: nowrap;
+  }
+  .scale-table thead th.th-item { text-align: left; padding-left: 0; }
+  .scale-table thead th.th-just { text-align: left; }
+  .scale-table tbody tr:last-child td { border-bottom: none; }
+  .scale-table tbody td {
+    padding: 10px 4px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .scale-table tbody td.td-item {
+    font-size: 13px;
+    color: var(--text-primary);
+    line-height: 1.4;
+    padding-left: 0;
+    padding-right: 8px;
+  }
+  .scale-table tbody td.td-radio { text-align: center; }
+  .scale-table tbody td.td-just { padding: 6px 0 6px 8px; }
+
+  .radio-btn {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border-strong);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    display: block;
+    margin: 0 auto;
+  }
+  .radio-btn:checked {
+    border-color: var(--blue);
+    background: var(--blue);
+    box-shadow: inset 0 0 0 3px #fff;
+  }
+  .radio-btn:focus { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+  .just-textarea {
+    width: 100%;
+    min-height: 52px;
+    padding: 6px 8px;
+    font-size: 12px;
+    font-family: inherit;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-white);
+    color: var(--text-primary);
+    resize: vertical;
+    line-height: 1.5;
+    transition: border-color 0.15s;
+  }
+  .just-textarea:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 0 2px rgba(37,99,235,0.1);
+  }
+
+  /* CHECKBOXES */
+  .checkbox-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+  .checkbox-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-primary);
+    line-height: 1.45;
+  }
+  .checkbox-item input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--border-strong);
+    border-radius: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .checkbox-item input[type="checkbox"]:checked {
+    background: var(--blue);
+    border-color: var(--blue);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M1 5l3.5 3.5L11 1'/%3E%3C/svg%3E");
+    background-size: 10px;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  /* DIVIDER */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 36px 0;
+  }
+
+  /* SUBMIT */
+  .submit-area {
+    background: var(--bg-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    text-align: center;
+  }
+  .submit-area p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    line-height: 1.6;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .btn-submit {
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    padding: 12px 32px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .btn-submit:hover { background: #1D4ED8; }
+  .btn-submit:active { transform: scale(0.98); }
+
+  /* PROGRESS COUNTER */
+  .progress-counter {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: right;
+    margin-bottom: 24px;
+  }
+  .progress-counter strong { color: var(--blue); }
+
+  /* SUCCESS */
+  #success-msg {
+    display: none;
+    background: var(--success-light);
+    border: 1px solid #6EE7B7;
+    border-radius: var(--radius-lg);
+    padding: 40px 32px;
+    text-align: center;
+    margin-top: 32px;
+  }
+  .success-icon {
+    width: 56px; height: 56px;
+    background: var(--success);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+  }
+  .success-icon svg { width: 28px; height: 28px; stroke: #fff; }
+  #success-msg h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; color: #065F46; }
+  #success-msg p { font-size: 14px; color: #064E3B; line-height: 1.7; }
+
+  /* ADMIN LINK */
+  .admin-link-wrap {
+    text-align: center;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+  .admin-link {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+  }
+  .admin-link:hover { color: var(--text-secondary); }
+
+  /* ADMIN LOGIN */
+  #admin-login {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  #admin-login.open { display: flex; }
+  .login-card {
+    background: var(--bg-white);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    width: 100%;
+    max-width: 360px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  }
+  .login-card h2 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .login-card p { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; }
+  .login-card label { font-size: 12px; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 6px; }
+  .login-card input[type="password"] {
+    width: 100%; padding: 10px 12px; font-size: 14px; font-family: inherit;
+    border: 1px solid var(--border-strong); border-radius: var(--radius);
+    background: var(--bg-white); color: var(--text-primary); margin-bottom: 14px;
+  }
+  .login-card input[type="password"]:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+  .login-error { font-size: 12px; color: #DC2626; margin-bottom: 10px; display: none; }
+  .login-actions { display: flex; gap: 10px; justify-content: flex-end; }
+  .btn-cancel {
+    background: none; border: 1px solid var(--border-strong);
+    border-radius: var(--radius); padding: 9px 18px;
+    font-size: 14px; font-family: inherit; cursor: pointer; color: var(--text-secondary);
+  }
+  .btn-cancel:hover { background: var(--bg-section); }
+  .btn-login {
+    background: var(--blue); color: #fff; border: none;
+    border-radius: var(--radius); padding: 9px 18px;
+    font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer;
+  }
+  .btn-login:hover { background: #1D4ED8; }
+
+  /* ADMIN PANEL */
+  #admin-panel {
+    display: none;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+  .admin-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .admin-header h1 { font-size: 22px; font-weight: 700; }
+  .admin-header p { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+  .admin-actions { display: flex; gap: 8px; }
+  .btn-export {
+    background: var(--bg-white); border: 1px solid var(--border-strong);
+    border-radius: var(--radius); padding: 8px 16px;
+    font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; color: var(--text-primary);
+  }
+  .btn-export:hover { background: var(--bg-section); }
+  .btn-exit-admin {
+    background: none; border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 8px 14px;
+    font-size: 13px; font-family: inherit; cursor: pointer; color: var(--text-secondary);
+  }
+  .btn-exit-admin:hover { background: var(--bg-section); }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--bg-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+  .stat-card .stat-val { font-size: 28px; font-weight: 700; color: var(--blue); }
+  .stat-card .stat-label { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+  .response-list { display: flex; flex-direction: column; gap: 16px; }
+  .response-card {
+    background: var(--bg-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .response-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    cursor: pointer;
+    user-select: none;
+    gap: 12px;
+  }
+  .response-card-header:hover { background: var(--bg-section); }
+  .resp-meta { flex: 1; }
+  .resp-title { font-size: 15px; font-weight: 600; }
+  .resp-sub { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+  .resp-badge {
+    font-size: 11px; font-weight: 600; padding: 3px 10px;
+    border-radius: 100px; white-space: nowrap;
+    background: var(--blue-light); color: var(--blue);
+  }
+  .resp-chevron { font-size: 18px; color: var(--text-muted); transition: transform 0.2s; }
+  .resp-chevron.open { transform: rotate(180deg); }
+
+  .response-card-body {
+    display: none;
+    padding: 0 20px 20px;
+    border-top: 1px solid var(--border);
+  }
+  .response-card-body.open { display: block; }
+
+  .resp-section-title {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--text-muted);
+    margin: 20px 0 12px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .resp-field { margin-bottom: 14px; }
+  .resp-field-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; font-weight: 600; }
+  .resp-field-value {
+    font-size: 13px; color: var(--text-primary); line-height: 1.6;
+    background: var(--bg-section); border-radius: 6px; padding: 8px 12px;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .resp-field-value.empty { color: var(--text-muted); font-style: italic; }
+
+  .scale-display { display: flex; flex-direction: column; gap: 6px; }
+  .scale-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    align-items: start;
+    background: var(--bg-section);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  .scale-row-item { color: var(--text-primary); line-height: 1.4; }
+  .scale-row-right { text-align: right; min-width: 90px; }
+  .scale-nota {
+    font-weight: 700; color: var(--blue);
+    font-size: 13px; white-space: nowrap;
+  }
+  .scale-just { color: var(--text-secondary); font-size: 11px; margin-top: 2px; }
+
+  .empty-admin {
+    text-align: center; padding: 60px 20px;
+    color: var(--text-muted); font-size: 14px;
+    background: var(--bg-white); border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-lg);
+  }
+  .empty-admin strong { display: block; font-size: 18px; margin-bottom: 8px; color: var(--text-secondary); }
+</style>
+</head>
+<body>
+
+<div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
+
+<div class="page-wrap">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="institution-badge">UFMG · ICA · Administração</div>
+    <h1 class="page-title">Avaliação Biopsicossocial nas Universidades Federais de Minas Gerais</h1>
+    <p class="page-meta">Pesquisador: Alberto Costa de Oliveira &nbsp;·&nbsp; Orientadora: Prof.ª Ms. Lucineia Lopes Bahia Ribeiro &nbsp;·&nbsp; Lei nº 13.146/2015</p>
+  </div>
+
+  <div class="notice">
+    <strong>Informações importantes antes de começar:</strong> Este formulário é destinado a coordenadores e profissionais dos Núcleos de Acessibilidade das Universidades Federais de Minas Gerais. As informações têm finalidade estritamente acadêmica e serão tratadas com sigilo. A participação é voluntária e pode ser interrompida a qualquer momento, sem qualquer prejuízo ao(à) respondente. O(A) participante será identificado(a) por codinome na apresentação dos resultados, em conformidade com a Resolução CNS nº 510/2016.
+  </div>
+
+  <div class="progress-counter">Campos preenchidos: <strong id="prog-count">0 / 0</strong></div>
+
+  <div id="form-body">
+
+    <!-- PARTE 1 -->
+    <div class="form-section">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <div class="section-info">
+          <div class="section-title">Identificação do(a) respondente</div>
+          <div class="section-obj">Todos os campos desta seção são opcionais.</div>
+        </div>
+      </div>
+
+      <div class="question">
+        <div class="field-group">
+          <label class="field-label" for="instituicao">Instituição (IFES)</label>
+          <input type="text" id="instituicao" name="instituicao" placeholder="Ex.: UFMG, UFLA, UFV, UFTM…" data-trackable>
+        </div>
+        <div class="field-grid field-grid-2">
+          <div class="field-group">
+            <label class="field-label" for="cargo">Cargo / Função atual</label>
+            <input type="text" id="cargo" name="cargo" placeholder="Ex.: Coordenador(a) de Acessibilidade" data-trackable>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="formacao">Área de formação (graduação)</label>
+            <input type="text" id="formacao" name="formacao" placeholder="Ex.: Psicologia, Serviço Social…" data-trackable>
+          </div>
+        </div>
+        <div class="field-grid field-grid-2">
+          <div class="field-group">
+            <label class="field-label" for="tempo">Tempo de atuação no Núcleo de Acessibilidade</label>
+            <input type="text" id="tempo" name="tempo" placeholder="Ex.: 3 anos e 6 meses" data-trackable>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="participacao">Participação em bancas ou processos de avaliação biopsicossocial</label>
+            <input type="text" id="participacao" name="participacao" placeholder="Ex.: Sim, desde 2022 — participei de 15 bancas" data-trackable>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- PARTE 2 -->
+    <div class="form-section">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <div class="section-info">
+          <div class="section-title">Marco normativo e estrutura institucional do Núcleo de Acessibilidade</div>
+          <div class="section-obj">OE1 — Mapear documentos normativos que regulamentam a estrutura dos Núcleos · OE3 — Verificar normativos internos sobre as quatro dimensões de acessibilidade</div>
+        </div>
+      </div>
+
+      <div class="subsection-label">2.1 Criação e vinculação administrativa</div>
+
+      <div class="question">
+        <p class="question-label"><span class="question-num">P1)</span> O Núcleo de Acessibilidade da universidade está vinculado a qual setor ou instância administrativa? Como ele está estruturado atualmente em termos de equipe e atribuições?</p>
+        <p class="question-hint">Se possível, mencione portarias ou resoluções de referência — essas informações conferem maior credibilidade ao resultado da pesquisa.</p>
+        <textarea id="p1" name="p1" placeholder="Descreva aqui a vinculação administrativa e a estrutura atual do Núcleo…" data-trackable rows="5"></textarea>
+      </div>
+
+      <div class="subsection-label">2.2 Abrangência da política institucional de acessibilidade</div>
+
+      <div class="question">
+        <p class="question-label"><span class="question-num">P2)</span> A universidade possui uma Política Institucional de Acessibilidade formalizada? Em caso afirmativo, esse documento regulamenta explicitamente a avaliação biopsicossocial para fins de verificação de cotas PCD?</p>
+        <p class="question-hint">Se possível, mencione portarias ou resoluções de referência.</p>
+        <textarea id="p2" name="p2" placeholder="Descreva a existência e o conteúdo da Política Institucional de Acessibilidade…" data-trackable rows="5"></textarea>
+      </div>
+
+      <div class="question">
+        <p class="question-label"><span class="question-num">P3)</span> Em que medida os documentos normativos internos da sua instituição cobrem as dimensões de acessibilidade abaixo? Marque o nível de cobertura e acrescente uma justificativa.</p>
+        <div class="scale-legend">
+          <span><strong>1</strong> Sem normativo formal</span>
+          <span><strong>2</strong> Em elaboração/discussão</span>
+          <span><strong>3</strong> Normativo existente, mas incompleto</span>
+          <span><strong>4</strong> Normativo completo, parcialmente implementado</span>
+          <span><strong>5</strong> Normativo completo e plenamente implementado</span>
+        </div>
+        <div class="scale-table-wrap">
+          <table class="scale-table">
+            <thead>
+              <tr>
+                <th class="th-item" style="width:36%">Dimensão</th>
+                <th style="width:7%">1</th><th style="width:7%">2</th><th style="width:7%">3</th><th style="width:7%">4</th><th style="width:7%">5</th>
+                <th class="th-just">Justificativa / Comentário</th>
+              </tr>
+            </thead>
+            <tbody id="p3-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- PARTE 3 -->
+    <div class="form-section">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <div class="section-info">
+          <div class="section-title">Fluxo institucional da avaliação biopsicossocial</div>
+          <div class="section-obj">OE2 — Analisar o fluxo institucional previsto para a avaliação biopsicossocial nas Universidades Federais mineiras</div>
+        </div>
+      </div>
+
+      <div class="subsection-label">3.1 Descrição do processo</div>
+
+      <div class="question">
+        <p class="question-label"><span class="question-num">P4)</span> Descreva, passo a passo, como funciona o fluxo institucional da avaliação biopsicossocial nesta universidade.</p>
+        <p class="question-hint">Por favor, indique: (a) quem pode solicitar a avaliação; (b) quem compõe a equipe avaliativa; (c) quais documentos são exigidos do candidato; (d) qual é o prazo médio entre solicitação e emissão do parecer; (e) como é comunicado o resultado ao candidato. Documentos que detalhem o fluxo são muito bem-vindos e darão maior credibilidade à pesquisa.</p>
+        <textarea id="p4" name="p4" placeholder="Descreva detalhadamente cada etapa do fluxo…" data-trackable rows="7"></textarea>
+      </div>
+
+      <div class="question">
+        <p class="question-label"><span class="question-num">P5)</span> O IFBr-M (Índice de Funcionalidade Brasileiro Modificado) é utilizado de forma integral neste processo, ou a instituição adota uma versão adaptada? Há outros instrumentos complementares utilizados na avaliação?</p>
+        <p class="question-hint">Se possível, informe quais são os instrumentos utilizados.</p>
+        <textarea id="p5" name="p5" placeholder="Descreva o uso do IFBr-M e eventuais instrumentos complementares…" data-trackable rows="5"></textarea>
+      </div>
+
+      <div class="subsection-label">3.2 Adequação do IFBr-M à realidade institucional</div>
+
+      <div class="question">
+        <p class="question-label"><span class="question-num">P6)</span> Como você avalia os aspectos do IFBr-M listados abaixo para a realidade da sua universidade?</p>
+        <div class="scale-legend">
+          <span><strong>1</strong> Totalmente inadequado</span>
+          <span><strong>2</strong> Pouco adequado</span>
+          <span><strong>3</strong> Moderadamente adequado</span>
+          <span><strong>4</strong> Adequado</span>
+          <span><strong>5</strong> Totalmente adequado</span>
+        </div>
+        <div class="scale-table-wrap">
+          <table class="scale-table">
+            <thead>
+              <tr>
+                <th class="th-item" style="width:36%">Aspecto</th>
+                <th style="width:7%">1</th><th style="width:7%">2</th><th style="width:7%">3</th><th style="width:7%">4</th><th style="width:7%">5</th>
+                <th class="th-just">Justificativa / Comentário</th>
+              </tr>
+            </thead>
+            <tbody id="p6-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="question">
+        <p class="question-label"><span class="question-num">P7)</span> Houve situações em que a aplicação do IFBr-M gerou controvérsia interna (entre a equipe avaliativa, entre setores ou perante recursos de candidatos)? Como essas situações foram conduzidas?</p>
+        <p class="question-hint">Se possível, ilustre a resposta com exemplos concretos.</p>
+        <textarea id="p7" name="p7" placeholder="Descreva eventuais controvérsias e como foram gerenciadas…" data-trackable rows="5"></textarea>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- PARTE 4 -->
+    <div class="form-section">
+      <div class="section-header">
+        <div class="section-num">4</div>
+        <div class="section-info">
+          <div class="section-title">Percepção sobre a implementação da avaliação biopsicossocial</div>
+          <div class="section-obj">OE4 — Conhecer a percepção dos coordenadores/profissionais dos Núcleos sobre a implementação da avaliação biopsicossocial</div>
+        </div>
+      </div>
+
+      <div class="subsection-label">4.1 Conhecimento técnico e capacitação</div>
+
+      <div class="question">
+        <p class="question-label"><span class="question-num">P8)</span> Antes de assumir as atividades no Núcleo, você já havia tido contato formal com a CIF (Classificação Internacional de Funcionalidade) ou com o IFBr-M? Em caso afirmativo, comente como foi a adaptação. Em caso negativo, relate como ocorreu o processo de apropriação desses instrumentos.</p>
+        <textarea id="p8" name="p8" placeholder="Relate sua experiência prévia e o processo de apropriação dos instrumentos…" data-trackable rows="5"></textarea>
+      </div>
+
+      <div class="question">
+        <p class="question-label"><span class="question-num">P9)</span> A universidade oferece programa formal de capacitação para o uso da CIF ou do IFBr-M? Marque a alternativa que melhor descreve a situação.</p>
+        <div class="checkbox-group" id="p9-checkboxes"></div>
+        <div class="field-group" style="margin-top:14px">
+          <label class="field-label" for="p9-comentario">Comentários adicionais sobre a capacitação</label>
+          <textarea id="p9-comentario" name="p9_comentario" placeholder="Observações que possam enriquecer a análise dos resultados…" data-trackable rows="3"></textarea>
+        </div>
+      </div>
+
+      <div class="subsection-label">4.2 Avaliação global da implementação</div>
+
+      <div class="question">
+        <p class="question-label"><span class="question-num">P10)</span> Como você avalia o grau de avanço da implementação da avaliação biopsicossocial nos aspectos abaixo, considerando a trajetória do Núcleo desde sua criação?</p>
+        <div class="scale-legend">
+          <span><strong>1</strong> Muito incipiente</span>
+          <span><strong>2</strong> Inicial</span>
+          <span><strong>3</strong> Em consolidação (práticas existentes, mas com lacunas)</span>
+          <span><strong>4</strong> Consolidado</span>
+          <span><strong>5</strong> Plenamente consolidado (referência institucional)</span>
+        </div>
+        <div class="scale-table-wrap">
+          <table class="scale-table">
+            <thead>
+              <tr>
+                <th class="th-item" style="width:36%">Aspecto</th>
+                <th style="width:7%">1</th><th style="width:7%">2</th><th style="width:7%">3</th><th style="width:7%">4</th><th style="width:7%">5</th>
+                <th class="th-just">Justificativa / Comentário</th>
+              </tr>
+            </thead>
+            <tbody id="p10-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- PARTE 5 -->
+    <div class="form-section">
+      <div class="section-header">
+        <div class="section-num">5</div>
+        <div class="section-info">
+          <div class="section-title">Dificuldades, barreiras e estratégias de enfrentamento</div>
+          <div class="section-obj">OE5 — Identificar as principais dificuldades e estratégias de enfrentamento relatadas pelos profissionais na operacionalização das políticas de inclusão</div>
+        </div>
+      </div>
+
+      <div class="subsection-label">5.1 Avaliação das barreiras institucionais</div>
+
+      <div class="question">
+        <p class="question-label"><span class="question-num">P11)</span> Como você avalia o impacto das seguintes barreiras na operacionalização das políticas de inclusão no seu Núcleo?</p>
+        <div class="scale-legend">
+          <span><strong>1</strong> Não representa barreira</span>
+          <span><strong>2</strong> Barreira leve e esporádica</span>
+          <span><strong>3</strong> Barreira moderada</span>
+          <span><strong>4</strong> Barreira grave</span>
+          <span><strong>5</strong> Barreira muito grave e frequente</span>
+        </div>
+        <div class="scale-table-wrap">
+          <table class="scale-table">
+            <thead>
+              <tr>
+                <th class="th-item" style="width:36%">Barreira</th>
+                <th style="width:7%">1</th><th style="width:7%">2</th><th style="width:7%">3</th><th style="width:7%">4</th><th style="width:7%">5</th>
+                <th class="th-just">Justificativa / Comentário</th>
+              </tr>
+            </thead>
+            <tbody id="p11-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="subsection-label">5.2 Estratégias de superação</div>
+
+      <div class="question">
+        <p class="question-label"><span class="question-num">P12)</span> Dentre as barreiras identificadas como mais graves, quais estratégias o Núcleo tem adotado para enfrentá-las? Há alguma iniciativa que considera bem-sucedida e que poderia ser replicada por outras instituições?</p>
+        <textarea id="p12" name="p12" placeholder="Descreva as estratégias adotadas e as boas práticas identificadas…" data-trackable rows="5"></textarea>
+      </div>
+
+      <div class="question">
+        <p class="question-label"><span class="question-num">P13)</span> Em sua opinião, quais mudanças — normativas, estruturais, orçamentárias ou culturais — seriam mais urgentes para avançar na implementação plena da avaliação biopsicossocial nesta universidade?</p>
+        <textarea id="p13" name="p13" placeholder="Indique as mudanças que considera prioritárias…" data-trackable rows="5"></textarea>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- PARTE 6 -->
+    <div class="form-section">
+      <div class="section-header">
+        <div class="section-num">6</div>
+        <div class="section-info">
+          <div class="section-title">Demandas práticas dos estudantes com deficiência</div>
+          <div class="section-obj">OE6 — Identificar quais providências de acessibilidade são mais demandadas pelos estudantes com deficiência segundo a percepção dos profissionais dos Núcleos</div>
+        </div>
+      </div>
+
+      <div class="question">
+        <p class="question-label"><span class="question-num">P14)</span> Com base na sua experiência cotidiana no Núcleo, avalie a frequência com que os estudantes com deficiência demandam cada uma das providências abaixo.</p>
+        <div class="scale-legend">
+          <span><strong>1</strong> Raramente ou nunca demandado</span>
+          <span><strong>2</strong> Demandado ocasionalmente</span>
+          <span><strong>3</strong> Frequência moderada</span>
+          <span><strong>4</strong> Demandado frequentemente</span>
+          <span><strong>5</strong> Demandado com muita frequência</span>
+        </div>
+        <div class="scale-table-wrap">
+          <table class="scale-table">
+            <thead>
+              <tr>
+                <th class="th-item" style="width:36%">Providência</th>
+                <th style="width:7%">1</th><th style="width:7%">2</th><th style="width:7%">3</th><th style="width:7%">4</th><th style="width:7%">5</th>
+                <th class="th-just">Justificativa / Comentário</th>
+              </tr>
+            </thead>
+            <tbody id="p14-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="question">
+        <p class="question-label"><span class="question-num">P15)</span> Entre as demandas acima, quais são atendidas diretamente pelo Núcleo e quais dependem de outros setores institucionais? Há casos de demandas que permanecem sem atendimento adequado? Se sim, quais e por quê?</p>
+        <textarea id="p15" name="p15" placeholder="Descreva a divisão de responsabilidades e eventuais lacunas no atendimento…" data-trackable rows="5"></textarea>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- PARTE 7 -->
+    <div class="form-section">
+      <div class="section-header">
+        <div class="section-num">7</div>
+        <div class="section-info">
+          <div class="section-title">Considerações finais</div>
+        </div>
+      </div>
+
+      <div class="question">
+        <p class="question-label"><span class="question-num">P16)</span> Há algum aspecto relevante sobre a implementação da avaliação biopsicossocial ou sobre as práticas de inclusão nesta universidade que não foi abordado nas perguntas anteriores e que você gostaria de acrescentar?</p>
+        <textarea id="p16" name="p16" placeholder="Acrescente aqui quaisquer considerações adicionais que julgar relevantes…" data-trackable rows="6"></textarea>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-area">
+      <p>Ao enviar, você confirma que as informações prestadas são verídicas e que concorda com o uso acadêmico dos dados, conforme o Termo de Consentimento Livre e Esclarecido (TCLE) apresentado previamente.</p>
+      <button class="btn-submit" onclick="submitForm()">Enviar respostas</button>
+    </div>
+
+  </div><!-- /#form-body -->
+
+  <!-- SUCCESS -->
+  <div id="success-msg">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h3>Respostas enviadas com sucesso!</h3>
+    <p>Muito obrigado(a) pela sua contribuição. Suas respostas são fundamentais para a compreensão das práticas de inclusão nas Universidades Federais de Minas Gerais.<br><br>Os resultados desta pesquisa serão compartilhados com os(as) participantes após a defesa do Trabalho de Conclusão de Curso.</p>
+  </div>
+
+  <!-- ADMIN LINK -->
+  <div class="admin-link-wrap">
+    <button class="admin-link" onclick="openAdminLogin()">Área do pesquisador</button>
+  </div>
+
+</div><!-- /.page-wrap -->
+
+<!-- MODAL LOGIN ADMIN -->
+<div id="admin-login">
+  <div class="login-card">
+    <h2>Área do pesquisador</h2>
+    <p>Digite a senha para acessar as respostas coletadas.</p>
+    <label for="admin-pw">Senha</label>
+    <input type="password" id="admin-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="login-error" id="login-error">Senha incorreta. Tente novamente.</div>
+    <div class="login-actions">
+      <button class="btn-cancel" onclick="closeAdminLogin()">Cancelar</button>
+      <button class="btn-login" onclick="doLogin()">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAINEL ADMIN -->
+<div id="admin-panel">
+  <div class="admin-header">
+    <div>
+      <h1>Painel de respostas</h1>
+      <p>Avaliação Biopsicossocial nas IFES de MG — respostas armazenadas localmente neste navegador</p>
+    </div>
+    <div class="admin-actions">
+      <button class="btn-export" onclick="exportCSV()">⬇ Exportar CSV</button>
+      <button class="btn-export" onclick="exportJSON()">⬇ Exportar JSON</button>
+      <button class="btn-exit-admin" onclick="exitAdmin()">← Voltar ao formulário</button>
+    </div>
+  </div>
+  <div class="stats-row" id="admin-stats"></div>
+  <div class="response-list" id="response-list"></div>
+</div>
+
+<script>
+  /* ── DATA ── */
+  const data = {
+    p3: [
+      "Acessibilidade arquitetônica (espaços físicos, rotas acessíveis, mobiliário)",
+      "Acessibilidade comunicacional (LIBRAS, Braille, formatos alternativos)",
+      "Acessibilidade metodológica e pedagógica (adaptação de avaliações e currículo)",
+      "Acessibilidade programática (regulamentação de cotas, fluxos, processos seletivos)",
+      "Tecnologia Assistiva (softwares, equipamentos, empréstimos)"
+    ],
+    p6: [
+      "Clareza e objetividade dos critérios de avaliação",
+      "Abrangência dos domínios avaliados (motor, sensorial, cognitivo, social)",
+      "Facilidade de aplicação pela equipe multiprofissional",
+      "Compatibilidade com as especificidades do contexto acadêmico",
+      "Alinhamento com os princípios da CIF e do modelo biopsicossocial",
+      "Adequação para diferentes tipos de deficiência (física, visual, auditiva, intelectual)"
+    ],
+    p10: [
+      "Estrutura normativa (resoluções, portarias, regulamentos internos)",
+      "Equipe multiprofissional (composição, qualificação, estabilidade)",
+      "Instrumentos de avaliação (uso do IFBr-M, formulários, protocolos)",
+      "Fluxo institucional (clareza, celeridade, transparência do processo)",
+      "Comunicação com candidatos e estudantes PCD",
+      "Articulação com outros setores da universidade (Pró-Reitorias, Departamentos)"
+    ],
+    p11: [
+      "Insuficiência de recursos humanos no Núcleo",
+      "Insuficiência de recursos financeiros e materiais",
+      "Resistência ou desconhecimento de docentes sobre práticas inclusivas",
+      "Resistência ou falta de apoio de gestores e dirigentes",
+      "Desconhecimento da comunidade acadêmica sobre os direitos das PCD",
+      "Dificuldades de articulação intersetorial (entre setores da universidade)",
+      "Ausência ou inadequação da estrutura normativa interna",
+      "Dificuldades relacionadas à infraestrutura física (barreiras arquitetônicas)",
+      "Alta rotatividade de profissionais no Núcleo"
+    ],
+    p14: [
+      "Adaptação de provas (tempo estendido, local reservado, ledor, transcritor)",
+      "Fornecimento de materiais didáticos em formatos acessíveis (Braille, áudio, ampliação)",
+      "Intérprete de LIBRAS em sala de aula e/ou avaliações",
+      "Adaptação de mobiliário e espaços físicos",
+      "Acesso a Tecnologias Assistivas (softwares, equipamentos)",
+      "Transporte acessível dentro ou para o campus",
+      "Apoio pedagógico especializado (tutoria, atendimento individual)",
+      "Adaptação curricular (flexibilização de prazos, cargas horárias, metodologias)",
+      "Acompanhamento psicológico ou psicopedagógico"
+    ],
+    p9: [
+      "Capacitação formal e periódica oferecida pela instituição",
+      "Capacitação pontual/esporádica",
+      "Sem capacitação formal — aprendizado em serviço",
+      "Capacitação externa (cursos, congressos)",
+      "Sem capacitação de qualquer tipo"
+    ]
+  };
+
+  /* ── BUILD SCALE TABLES ── */
+  function buildTable(tbodyId, items, prefix) {
+    const tbody = document.getElementById(tbodyId);
+    items.forEach((item, i) => {
+      const tr = document.createElement('tr');
+      let cells = `<td class="td-item">${item}</td>`;
+      for (let v = 1; v <= 5; v++) {
+        cells += `<td class="td-radio"><input type="radio" class="radio-btn" name="${prefix}_${i}" value="${v}" onchange="updateProgress()" aria-label="Nota ${v} para ${item}"></td>`;
+      }
+      cells += `<td class="td-just"><textarea class="just-textarea" name="${prefix}_just_${i}" placeholder="Justifique…" oninput="updateProgress()" aria-label="Justificativa para ${item}"></textarea></td>`;
+      tr.innerHTML = cells;
+      tbody.appendChild(tr);
+    });
+  }
+
+  /* ── BUILD CHECKBOXES ── */
+  function buildCheckboxes() {
+    const wrap = document.getElementById('p9-checkboxes');
+    data.p9.forEach((opt, i) => {
+      const label = document.createElement('label');
+      label.className = 'checkbox-item';
+      label.innerHTML = `<input type="checkbox" name="p9_cb" value="${i}" onchange="updateProgress()"> ${opt}`;
+      wrap.appendChild(label);
+    });
+  }
+
+  /* ── PROGRESS ── */
+  function updateProgress() {
+    const trackable = document.querySelectorAll('[data-trackable]');
+    const radioGroups = new Set(Array.from(document.querySelectorAll('input[type="radio"]')).map(r => r.name));
+    const checkboxGroup = document.querySelectorAll('input[name="p9_cb"]');
+
+    let total = 0, filled = 0;
+
+    trackable.forEach(el => {
+      total++;
+      if (el.value.trim().length > 1) filled++;
+    });
+    radioGroups.forEach(name => {
+      total++;
+      if (document.querySelector(`input[name="${name}"]:checked`)) filled++;
+    });
+    total++;
+    if (Array.from(checkboxGroup).some(cb => cb.checked)) filled++;
+
+    const pct = total > 0 ? Math.round(filled / total * 100) : 0;
+    document.getElementById('prog-fill').style.width = pct + '%';
+    document.getElementById('prog-count').textContent = `${filled} / ${total}`;
+  }
+
+  /* ── COLLECT DATA ── */
+  function collectFormData() {
+    const out = {};
+    document.querySelectorAll('[data-trackable]').forEach(el => { out[el.name || el.id] = el.value; });
+    const radioGroups = new Set(Array.from(document.querySelectorAll('input[type="radio"]')).map(r => r.name));
+    radioGroups.forEach(name => {
+      const checked = document.querySelector(`input[name="${name}"]:checked`);
+      out[name] = checked ? checked.value : '';
+    });
+    out['p9_cb'] = Array.from(document.querySelectorAll('input[name="p9_cb"]:checked')).map(cb => cb.value);
+    document.querySelectorAll('.just-textarea').forEach(el => { if (el.name) out[el.name] = el.value; });
+    return out;
+  }
+
+  /* ── STORAGE KEY & SENHA ── */
+  const STORAGE_KEY = 'pesquisa_ifes_respostas';
+  const ADMIN_HASH  = 'alberto2025'; // ← troque para a senha desejada
+
+  function getRespostas() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+    catch(e) { return []; }
+  }
+  function saveResposta(obj) {
+    const arr = getRespostas();
+    arr.push(obj);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+  }
+
+  /* ── SUBMIT ── */
+  function submitForm() {
+    const formData = collectFormData();
+    formData._enviadoEm = new Date().toLocaleString('pt-BR');
+    formData._id = Date.now();
+    saveResposta(formData);
+
+    document.getElementById('form-body').style.display = 'none';
+    document.getElementById('success-msg').style.display = 'block';
+    document.getElementById('prog-fill').style.width = '100%';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ── ADMIN LOGIN ── */
+  function openAdminLogin() {
+    document.getElementById('admin-login').classList.add('open');
+    setTimeout(() => document.getElementById('admin-pw').focus(), 100);
+  }
+  function closeAdminLogin() {
+    document.getElementById('admin-login').classList.remove('open');
+    document.getElementById('admin-pw').value = '';
+    document.getElementById('login-error').style.display = 'none';
+  }
+  function doLogin() {
+    const pw = document.getElementById('admin-pw').value;
+    if (pw === ADMIN_HASH) {
+      closeAdminLogin();
+      showAdminPanel();
+    } else {
+      document.getElementById('login-error').style.display = 'block';
+      document.getElementById('admin-pw').value = '';
+      document.getElementById('admin-pw').focus();
+    }
+  }
+
+  /* ── LABELS LEGÍVEIS ── */
+  const fieldLabels = {
+    instituicao: 'Instituição (IFES)', cargo: 'Cargo / Função', formacao: 'Área de formação',
+    tempo: 'Tempo de atuação', participacao: 'Participação em bancas',
+    p1: 'P1 — Vinculação administrativa', p2: 'P2 — Política institucional de acessibilidade',
+    p4: 'P4 — Fluxo institucional (passo a passo)', p5: 'P5 — Uso do IFBr-M e instrumentos complementares',
+    p7: 'P7 — Controvérsias na aplicação do IFBr-M',
+    p8: 'P8 — Contato prévio com CIF / IFBr-M',
+    'p9-comentario': 'P9 — Comentários sobre capacitação',
+    p12: 'P12 — Estratégias de superação das barreiras',
+    p13: 'P13 — Mudanças urgentes para a implementação',
+    p15: 'P15 — Demandas atendidas vs. demandas não atendidas',
+    p16: 'P16 — Considerações finais'
+  };
+  const p9Labels = [
+    'Capacitação formal e periódica pela instituição',
+    'Capacitação pontual/esporádica',
+    'Sem capacitação formal — aprendizado em serviço',
+    'Capacitação externa (cursos, congressos)',
+    'Sem capacitação de qualquer tipo'
+  ];
+  const scaleGroups = {
+    p3: { label: 'P3 — Cobertura normativa das dimensões de acessibilidade', items: ['Acessibilidade arquitetônica','Acessibilidade comunicacional','Acessibilidade metodológica e pedagógica','Acessibilidade programática','Tecnologia Assistiva'] },
+    p6: { label: 'P6 — Adequação do IFBr-M', items: ['Clareza e objetividade dos critérios','Abrangência dos domínios avaliados','Facilidade de aplicação','Compatibilidade com contexto acadêmico','Alinhamento com CIF e modelo biopsicossocial','Adequação para diferentes tipos de deficiência'] },
+    p10: { label: 'P10 — Grau de avanço da implementação', items: ['Estrutura normativa','Equipe multiprofissional','Instrumentos de avaliação','Fluxo institucional','Comunicação com candidatos/estudantes PCD','Articulação com outros setores'] },
+    p11: { label: 'P11 — Impacto das barreiras institucionais', items: ['Insuficiência de recursos humanos','Insuficiência de recursos financeiros','Resistência de docentes','Resistência de gestores','Desconhecimento da comunidade acadêmica','Dificuldades de articulação intersetorial','Ausência/inadequação normativa','Barreiras arquitetônicas','Alta rotatividade de profissionais'] },
+    p14: { label: 'P14 — Frequência das demandas dos estudantes PCD', items: ['Adaptação de provas','Materiais didáticos acessíveis','Intérprete de LIBRAS','Adaptação de mobiliário/espaços','Tecnologias Assistivas','Transporte acessível','Apoio pedagógico especializado','Adaptação curricular','Acompanhamento psicológico/psicopedagógico'] }
+  };
+
+  /* ── RENDER ADMIN PANEL ── */
+  function showAdminPanel() {
+    document.querySelector('.page-wrap').style.display = 'none';
+    const panel = document.getElementById('admin-panel');
+    panel.style.display = 'block';
+
+    const respostas = getRespostas();
+
+    // Stats
+    const statsEl = document.getElementById('admin-stats');
+    const instituicoes = [...new Set(respostas.map(r => r.instituicao).filter(Boolean))];
+    statsEl.innerHTML = `
+      <div class="stat-card"><div class="stat-val">${respostas.length}</div><div class="stat-label">Respostas recebidas</div></div>
+      <div class="stat-card"><div class="stat-val">${instituicoes.length}</div><div class="stat-label">Instituições representadas</div></div>
+      <div class="stat-card"><div class="stat-val">${respostas.length > 0 ? respostas[respostas.length-1]._enviadoEm : '—'}</div><div class="stat-label">Última resposta</div></div>
+    `;
+
+    // Response cards
+    const listEl = document.getElementById('response-list');
+    if (respostas.length === 0) {
+      listEl.innerHTML = `<div class="empty-admin"><strong>Nenhuma resposta ainda</strong>As respostas aparecerão aqui assim que o formulário for enviado por algum participante.</div>`;
+      return;
+    }
+
+    listEl.innerHTML = '';
+    respostas.slice().reverse().forEach((resp, idx) => {
+      const realIdx = respostas.length - idx;
+      const card = document.createElement('div');
+      card.className = 'response-card';
+
+      const inst = resp.instituicao || 'Instituição não informada';
+      const cargo = resp.cargo || 'Cargo não informado';
+      const data_envio = resp._enviadoEm || '';
+
+      card.innerHTML = `
+        <div class="response-card-header" onclick="toggleCard(this)">
+          <div class="resp-meta">
+            <div class="resp-title">Resposta #${realIdx} — ${inst}</div>
+            <div class="resp-sub">${cargo} · Enviado em ${data_envio}</div>
+          </div>
+          <span class="resp-badge">Ver respostas</span>
+          <span class="resp-chevron">▾</span>
+        </div>
+        <div class="response-card-body">${renderResp(resp)}</div>
+      `;
+      listEl.appendChild(card);
+    });
+  }
+
+  function toggleCard(header) {
+    const body = header.nextElementSibling;
+    const chevron = header.querySelector('.resp-chevron');
+    body.classList.toggle('open');
+    chevron.classList.toggle('open');
+  }
+
+  function renderResp(resp) {
+    let html = '';
+
+    // Identificação
+    html += `<div class="resp-section-title">Parte 1 — Identificação</div>`;
+    ['instituicao','cargo','formacao','tempo','participacao'].forEach(k => {
+      html += renderField(fieldLabels[k] || k, resp[k]);
+    });
+
+    // Parte 2
+    html += `<div class="resp-section-title">Parte 2 — Marco normativo</div>`;
+    html += renderField(fieldLabels.p1, resp.p1);
+    html += renderField(fieldLabels.p2, resp.p2);
+    html += renderScaleGroup(resp, 'p3');
+
+    // Parte 3
+    html += `<div class="resp-section-title">Parte 3 — Fluxo institucional</div>`;
+    html += renderField(fieldLabels.p4, resp.p4);
+    html += renderField(fieldLabels.p5, resp.p5);
+    html += renderScaleGroup(resp, 'p6');
+    html += renderField(fieldLabels.p7, resp.p7);
+
+    // Parte 4
+    html += `<div class="resp-section-title">Parte 4 — Percepção sobre a implementação</div>`;
+    html += renderField(fieldLabels.p8, resp.p8);
+    // p9 checkboxes
+    const cbSel = (resp.p9_cb || []).map(i => p9Labels[i] || i).join(', ') || null;
+    html += renderField('P9 — Situação da capacitação', cbSel);
+    html += renderField(fieldLabels['p9-comentario'], resp['p9-comentario'] || resp['p9_comentario']);
+    html += renderScaleGroup(resp, 'p10');
+
+    // Parte 5
+    html += `<div class="resp-section-title">Parte 5 — Dificuldades e estratégias</div>`;
+    html += renderScaleGroup(resp, 'p11');
+    html += renderField(fieldLabels.p12, resp.p12);
+    html += renderField(fieldLabels.p13, resp.p13);
+
+    // Parte 6
+    html += `<div class="resp-section-title">Parte 6 — Demandas dos estudantes</div>`;
+    html += renderScaleGroup(resp, 'p14');
+    html += renderField(fieldLabels.p15, resp.p15);
+
+    // Parte 7
+    html += `<div class="resp-section-title">Parte 7 — Considerações finais</div>`;
+    html += renderField(fieldLabels.p16, resp.p16);
+
+    return html;
+  }
+
+  function renderField(label, value) {
+    const empty = !value || String(value).trim() === '';
+    return `<div class="resp-field">
+      <div class="resp-field-label">${label}</div>
+      <div class="resp-field-value${empty?' empty':''}">${empty ? 'Não respondido' : escHtml(String(value))}</div>
+    </div>`;
+  }
+
+  function renderScaleGroup(resp, prefix) {
+    const group = scaleGroups[prefix];
+    if (!group) return '';
+    let rows = '';
+    group.items.forEach((item, i) => {
+      const nota = resp[`${prefix}_${i}`] || '—';
+      const just = resp[`${prefix}_just_${i}`] || '';
+      rows += `<div class="scale-row">
+        <div class="scale-row-item">${item}</div>
+        <div class="scale-row-right">
+          <div class="scale-nota">Nota: ${nota}</div>
+          ${just ? `<div class="scale-just">${escHtml(just)}</div>` : ''}
+        </div>
+      </div>`;
+    });
+    return `<div class="resp-field">
+      <div class="resp-field-label">${group.label}</div>
+      <div class="scale-display">${rows}</div>
+    </div>`;
+  }
+
+  function escHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  /* ── EXPORTAR CSV ── */
+  function exportCSV() {
+    const respostas = getRespostas();
+    if (!respostas.length) { alert('Nenhuma resposta para exportar.'); return; }
+
+    const allKeys = [...new Set(respostas.flatMap(r => Object.keys(r)))];
+    const rows = [allKeys.join(';')];
+    respostas.forEach(r => {
+      rows.push(allKeys.map(k => {
+        const v = r[k] === undefined ? '' : Array.isArray(r[k]) ? r[k].join('|') : String(r[k]);
+        return `"${v.replace(/"/g,'""')}"`;
+      }).join(';'));
+    });
+    download('respostas_pesquisa_biopsicossocial.csv', rows.join('\n'), 'text/csv');
+  }
+
+  /* ── EXPORTAR JSON ── */
+  function exportJSON() {
+    const respostas = getRespostas();
+    if (!respostas.length) { alert('Nenhuma resposta para exportar.'); return; }
+    download('respostas_pesquisa_biopsicossocial.json', JSON.stringify(respostas, null, 2), 'application/json');
+  }
+
+  function download(filename, content, type) {
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  /* ── SAIR DO ADMIN ── */
+  function exitAdmin() {
+    document.getElementById('admin-panel').style.display = 'none';
+    document.querySelector('.page-wrap').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ── INIT ── */
+  buildTable('p3-tbody', data.p3, 'p3');
+  buildTable('p6-tbody', data.p6, 'p6');
+  buildTable('p10-tbody', data.p10, 'p10');
+  buildTable('p11-tbody', data.p11, 'p11');
+  buildTable('p14-tbody', data.p14, 'p14');
+  buildCheckboxes();
+
+  document.querySelectorAll('[data-trackable]').forEach(el => {
+    el.addEventListener('input', updateProgress);
+  });
+  updateProgress();
+</script>
+</body>
+</html>
